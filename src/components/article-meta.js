@@ -5,6 +5,7 @@ export default function (props) {
 	let data = props.article;
 	let author = data.author || {};
 	let isFollow = author.following;
+	let isFav = data.favorited;
 
 	return (
 		<div class="article-meta">
@@ -32,10 +33,9 @@ export default function (props) {
 						{ isFollow ? 'Unf' : 'F' }ollow { author.username }
 					</button>,
 					' ',
-					<button class="btn btn-sm btn-outline-primary">
+					<button class={ `btn btn-sm ${isFav ? 'btn-primary' : 'btn-outline-primary'}` } onclick={ props.onFavorite }>
 						<i class="ion-heart" />
-						&nbsp;
-						Favorite Post <span class="counter">(29)</span>
+						{ isFav ? 'Unf' : 'F' }avorite Post <span class="counter">({ data.favoritesCount })</span>
 					</button>
 				]
 			}

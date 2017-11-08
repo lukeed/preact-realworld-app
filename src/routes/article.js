@@ -17,6 +17,14 @@ export default class Article extends Component {
 		});
 	}
 
+	onFavorite = _ => {
+		let item = this.state.item;
+		let func = item.favorited ? del : post;
+		func(`articles/${item.slug}/favorite`).then(res => {
+			this.setState({ item:res.article });
+		});
+	}
+
 	getItem(slug) {
 		slug = slug || this.props.title;
 
@@ -40,7 +48,11 @@ export default class Article extends Component {
 		let article = state.item;
 		let isOwner = me && me.username === (article.author || {}).username;
 
-		let meta = h(Meta, { article, isOwner, onFollow:this.onFollow });
+		let meta = h(Meta, {
+			article, isOwner,
+			onFollow: this.onFollow,
+			onFavorite: this.onFavorite
+		});
 
 		return (
 			<div class="article-page">
