@@ -1,12 +1,17 @@
+import { extend } from '@/utils';
 import { getToken, setToken, setUser } from '@/utils/local';
 
 let TOKEN = getToken();
 
+const BASE = {
+	'Content-Type': 'application/json;charset=UTF-8',
+	'Accept': 'application/json, text/plain, */*'
+};
+
 export function headers() {
-	return {
-    'Authorization': `Token ${TOKEN}`,
-    'Content-Type': 'application/json'
-  };
+	let obj = extend({}, BASE);
+	TOKEN && extend(obj, { Authorization:`Token ${TOKEN}` });
+	return obj;
 }
 
 export function login(res) {
