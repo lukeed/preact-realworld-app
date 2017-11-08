@@ -125,17 +125,26 @@ export default class Article extends Component {
 
 					<div class="row">
 						<div class="col-xs-12 col-md-8 offset-md-2">
-							<form class="card comment-form" onsubmit={ this.onCommentAdd }>
-								<div class="card-block">
-									<textarea ref={x => this.newBody=x} disabled={ state.loading }
-										rows="3" class="form-control" placeholder="Write a comment..." />
-								</div>
+							{
+								!!me // logged in?
+								? (
+									<form class="card comment-form" onsubmit={ this.onCommentAdd }>
+										<div class="card-block">
+											<textarea ref={x => this.newBody=x} disabled={ state.loading }
+												rows="3" class="form-control" placeholder="Write a comment..." />
+										</div>
 
-								<div class="card-footer">
-									<img src={ me.image } class="comment-author-img" />
-									<button class="btn btn-sm btn-primary" disabled={ state.loading }>Post Comment</button>
-								</div>
-							</form>
+										<div class="card-footer">
+											<img src={ me.image } class="comment-author-img" />
+											<button class="btn btn-sm btn-primary" disabled={ state.loading }>Post Comment</button>
+										</div>
+									</form>
+								) : (
+									<p>
+										<Link href="/login">Sign in</Link> or <Link href="/register">Sign up</Link> to add comments on this article.
+									</p>
+								)
+							}
 
 							{
 								state.comments.map(o => {
