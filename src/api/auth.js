@@ -21,4 +21,8 @@ export function login(res) {
 	setUser(user);
 	bus.emit('auth:change', user);
 }
+
+export function logout() {
+	bus.emit('auth:change', false);
+	setToken(false); setUser(false);
 }
