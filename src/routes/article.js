@@ -1,10 +1,12 @@
-import { h, Component } from 'preact';
-import { Link } from 'preact-router';
 import translate from 'snarkdown';
+import { Link } from 'preact-router';
+import { h, Component } from 'preact';
+import Meta from '@/components/article-meta';
+import { getUser } from '@/utils/local';
 import { get } from '@/api';
 
 export default class Article extends Component {
-	state = { loading:true, item:{} }
+	state = { loading:true, user:getUser(), item:{} }
 
 	getItem(slug) {
 		slug = slug || this.props.title;
@@ -25,39 +27,17 @@ export default class Article extends Component {
 	}
 
 	render(_, state) {
+		let me = state.user;
 		let data = state.item;
 		let author = data.author || {};
+		let isAuthor = me && me.username === author.username;
 
 		return (
 			<div class="article-page">
 				<div class="banner">
 					<div class="container">
-
 						<h1>{ data.title }</h1>
-
-						<div class="article-meta">
-							<Link href={ `/@${author.username}` }>
-								<img src={ author.image } />
-							</Link>
-
-							<div class="info">
-								<Link class="author" href={ `/@${author.username}` }>{ author.username }</Link>
-								<span class="date">{ new Date(data.createdAt).toDateString() }</span>
-							</div>
-
-							<button class="btn btn-sm btn-outline-secondary">
-								<i class="ion-plus-round" />
-								&nbsp;
-								Follow Eric Simons <span class="counter">(10)</span>
-							</button>
-							&nbsp;&nbsp;
-							<button class="btn btn-sm btn-outline-primary">
-								<i class="ion-heart" />
-								&nbsp;
-								Favorite Post <span class="counter">(29)</span>
-							</button>
-						</div>
-
+						<Meta isOwner={ isAuthor } article={ data } />
 					</div>
 				</div>
 
@@ -69,28 +49,7 @@ export default class Article extends Component {
 					<hr />
 
 					<div class="article-actions">
-						<div class="article-meta">
-							<a href="profile.html">
-								<img src="http://i.imgur.com/Qr71crq.jpg" />
-							</a>
-
-							<div class="info">
-								<a href="" class="author">Eric Simons</a>
-								<span class="date">January 20th</span>
-							</div>
-
-							<button class="btn btn-sm btn-outline-secondary">
-								<i class="ion-plus-round" />
-								&nbsp;
-								Follow Eric Simons <span class="counter">(10)</span>
-							</button>
-							&nbsp;
-							<button class="btn btn-sm btn-outline-primary">
-								<i class="ion-heart" />
-								&nbsp;
-								Favorite Post <span class="counter">(29)</span>
-							</button>
-						</div>
+						<Meta isOwner={ isAuthor } article={ data } />
 					</div>
 
 					<div class="row">
