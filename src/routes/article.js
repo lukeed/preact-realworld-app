@@ -21,7 +21,11 @@ export default class Article extends Component {
 	}
 
 	onFollow = _ => {
-		let item = this.state.item;
+		let now = this.state;
+		if (!now.user) {
+			return route('/login', true);
+		}
+		let item = now.item;
 		let func = item.author.following ? del : post;
 		func(`profiles/${item.author.username}/follow`).then(res => {
 			item.author = res.profile;
@@ -30,7 +34,11 @@ export default class Article extends Component {
 	}
 
 	onFavorite = _ => {
-		let item = this.state.item;
+		let now = this.state;
+		if (!now.user) {
+			return route('/login', true);
+		}
+		let item = now.item;
 		let func = item.favorited ? del : post;
 		func(`articles/${item.slug}/favorite`).then(res => {
 			this.setState({ item:res.article });
