@@ -1,12 +1,18 @@
 import translate from 'snarkdown';
 import { h, Component } from 'preact';
 import { route, Link } from 'preact-router';
+import Comment from '@/components/article-comment';
 import Meta from '@/components/article-meta';
 import { getUser } from '@/utils/local';
 import { del, get, post } from '@/api';
 
 export default class Article extends Component {
-	state = { loading:true, user:getUser(), item:{} }
+	state = {
+		loading: true,
+		user: getUser(),
+		comments: [],
+		item: {}
+	}
 
 	onDelete = _ => {
 		del(`articles/${this.state.item.slug}`).then(_ => {
@@ -43,7 +49,11 @@ export default class Article extends Component {
 				console.warn(`(404) Not found for '/articles/${slug}'...Back to safety!`);
 				route('/', true);
 			}
-		})
+		});
+
+		get(`articles/${slug}/comments`).then(res => {
+			this.setState({ comments:res.comments });
+		});
 	}
 
 	componentWillMount() {
