@@ -1,12 +1,18 @@
 import translate from 'snarkdown';
-import { Link } from 'preact-router';
 import { h, Component } from 'preact';
+import { route, Link } from 'preact-router';
 import Meta from '@/components/article-meta';
 import { getUser } from '@/utils/local';
 import { del, get, post } from '@/api';
 
 export default class Article extends Component {
 	state = { loading:true, user:getUser(), item:{} }
+
+	onDelete = _ => {
+		del(`articles/${this.state.item.slug}`).then(_ => {
+			route('/'); // back to home/dashboard
+		});
+	}
 
 	onFollow = _ => {
 		let item = this.state.item;
@@ -50,8 +56,9 @@ export default class Article extends Component {
 
 		let meta = h(Meta, {
 			article, isOwner,
-			onFollow: this.onFollow,
-			onFavorite: this.onFavorite
+			onDelete: this.onDelete,
+			onFavorite: this.onFavorite,
+			onFollow: this.onFollow
 		});
 
 		return (

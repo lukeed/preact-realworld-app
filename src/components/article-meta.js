@@ -24,7 +24,7 @@ export default function (props) {
 						<i class="ion-edit" /> Edit Article
 					</Link>,
 					' ',
-					<button class="btn btn-outline-danger btn-sm">
+					<button class="btn btn-outline-danger btn-sm" onclick={ props.onDelete }>
 						<i class="ion-trash-a" /> Delete Article
 					</button>
 				] : [
