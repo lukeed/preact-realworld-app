@@ -5,10 +5,10 @@
   "repository": "lukeed/preact-realworld-app",
   "license": "MIT",
   "scripts": {
-    "build": "preact build",
-    "serve": "preact build && preact serve",
+    "build": "preact build --template src/index.html",
+    "serve": "preact build --template src/index.html && preact serve",
     "start": "if-env NODE_ENV=production && npm run -s serve || npm run -s dev",
-    "watch": "preact watch"
+    "watch": "preact watch --template src/index.html"
   },
   "devDependencies": {
     "if-env": "^1.0.0",
