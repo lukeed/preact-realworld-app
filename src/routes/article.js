@@ -3,10 +3,19 @@ import { Link } from 'preact-router';
 import { h, Component } from 'preact';
 import Meta from '@/components/article-meta';
 import { getUser } from '@/utils/local';
-import { get } from '@/api';
+import { del, get, post } from '@/api';
 
 export default class Article extends Component {
 	state = { loading:true, user:getUser(), item:{} }
+
+	onFollow = _ => {
+		let item = this.state.item;
+		let func = item.author.following ? del : post;
+		func(`profiles/${item.author.username}/follow`).then(res => {
+			item.author = res.profile;
+			this.setState({ item });
+		});
+	}
 
 	getItem(slug) {
 		slug = slug || this.props.title;
@@ -37,7 +46,7 @@ export default class Article extends Component {
 				<div class="banner">
 					<div class="container">
 						<h1>{ data.title }</h1>
-						<Meta isOwner={ isAuthor } article={ data } />
+						<Meta isOwner={ isAuthor } article={ data } onFollow={ this.onFollow } />
 					</div>
 				</div>
 
@@ -49,7 +58,7 @@ export default class Article extends Component {
 					<hr />
 
 					<div class="article-actions">
-						<Meta isOwner={ isAuthor } article={ data } />
+						<Meta isOwner={ isAuthor } article={ data } onFollow={ this.onFollow } />
 					</div>
 
 					<div class="row">

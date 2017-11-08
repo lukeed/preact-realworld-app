@@ -4,6 +4,7 @@ import { Link } from 'preact-router';
 export default function (props) {
 	let data = props.article;
 	let author = data.author || {};
+	let isFollow = author.following;
 
 	return (
 		<div class="article-meta">
@@ -26,10 +27,9 @@ export default function (props) {
 						<i class="ion-trash-a" /> Delete Article
 					</button>
 				] : [
-					<button class="btn btn-sm btn-outline-secondary">
+					<button class={ `btn btn-sm ${isFollow ? 'btn-secondary' : 'btn-outline-secondary'}` } onclick={ props.onFollow }>
 						<i class="ion-plus-round" />
-						&nbsp;
-						Follow { author.username } <span class="counter">(10)</span>
+						{ isFollow ? 'Unf' : 'F' }ollow { author.username }
 					</button>,
 					' ',
 					<button class="btn btn-sm btn-outline-primary">
