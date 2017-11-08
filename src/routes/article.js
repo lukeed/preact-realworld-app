@@ -38,7 +38,12 @@ export default class Article extends Component {
 			let item = res.article;
 			item.body = translate(item.body);
 			this.setState({ loading:false, item });
-		});
+		}).catch(err => {
+			if (err.status === '404') {
+				console.warn(`(404) Not found for '/articles/${slug}'...Back to safety!`);
+				route('/', true);
+			}
+		})
 	}
 
 	componentWillMount() {
