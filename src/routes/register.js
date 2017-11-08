@@ -1,5 +1,6 @@
 import { Link } from 'preact-router';
 import { h, Component } from 'preact';
+import Input from '@/components/input';
 import { serialize, toErrors } from '@/utils';
 import { login } from '@/api/auth';
 import { post } from '@/api';
@@ -21,6 +22,8 @@ export default class Register extends Component {
 	}
 
 	render(props, state) {
+		let loading = state.loading;
+
 		return (
 			<div class="auth-page">
 				<div class="container page">
@@ -37,25 +40,16 @@ export default class Register extends Component {
 							</ul>
 
 							<form onsubmit={ this.onSubmit }>
-								<fieldset class="form-group">
-									<input class="form-control form-control-lg"
-										type="text" placeholder="Username" name="username"
-										disabled={state.loading} />
-								</fieldset>
+								<Input lg name="username"
+									placeholder="Username" disabled={ loading } />
 
-								<fieldset class="form-group">
-									<input class="form-control form-control-lg"
-										type="text" placeholder="Email" name="email"
-										disabled={state.loading} />
-								</fieldset>
+								<Input lg name="email" type="email"
+									placeholder="Email" disabled={ loading } />
 
-								<fieldset class="form-group">
-									<input class="form-control form-control-lg"
-										type="password" placeholder="Password" name="password"
-										disabled={state.loading} />
-								</fieldset>
+								<Input lg name="password" type="password"
+									placeholder="Password" disabled={ loading } />
 
-								<button class="btn btn-lg btn-primary pull-xs-right" disabled={state.loading}>Sign up</button>
+								<button class="btn btn-lg btn-primary pull-xs-right" disabled={ loading }>Sign up</button>
 							</form>
 						</div>
 

@@ -1,5 +1,6 @@
 import { h, Component } from 'preact';
 import { logout } from '@/api/auth';
+import Input from '@/components/input';
 
 export default class Settings extends Component {
 	state = { loading:false };
@@ -17,25 +18,15 @@ export default class Settings extends Component {
 
 							<form>
 								<fieldset>
-									<fieldset class="form-group">
-										<input class="form-control" type="text" placeholder="URL of profile picture" />
-									</fieldset>
+									<Input placeholder="URL of profile picture" name="image" value={ user.image } />
 
-									<fieldset class="form-group">
-										<input class="form-control form-control-lg" type="text" placeholder="Your Name" />
-									</fieldset>
+									<Input lg placeholder="Username" name="username" value={ user.username } />
 
-									<fieldset class="form-group">
-										<textarea class="form-control form-control-lg" rows="8" placeholder="Short bio about you"></textarea>
-									</fieldset>
+									<Input textarea lg placeholder="Short bio about you" rows="8" name="bio" value={ user.bio } />
 
-									<fieldset class="form-group">
-										<input class="form-control form-control-lg" type="text" placeholder="Email" />
-									</fieldset>
+									<Input lg placeholder="Email" type="email" name="email" value={ user.email } />
 
-									<fieldset class="form-group">
-										<input class="form-control form-control-lg" type="password" placeholder="Password" />
-									</fieldset>
+									<Input lg placeholder="New Password" type="password" name="password" value={ user.password } />
 
 									<button class="btn btn-lg btn-primary pull-xs-right">Update Settings</button>
 								</fieldset>

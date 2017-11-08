@@ -3,10 +3,10 @@ import mitt from 'mitt';
 export const bus = mitt();
 
 export function serialize(elm) {
-	let i=0, tmp, arr=elm.elements, out={}
+	let i=0, tmp, nn, arr=elm.elements, out={}
 	for (; i < arr.length; i++) {
-		tmp = arr[i];
-		if (tmp.nodeName === 'INPUT' && tmp.name && tmp.value) {
+		tmp=arr[i]; nn=tmp.nodeName;
+		if ((nn === 'INPUT' || nn === 'TEXTAREA') && tmp.name && tmp.value) {
 			out[ tmp.name ] = tmp.value;
 		}
 	}
