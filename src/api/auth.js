@@ -1,4 +1,4 @@
-import { bux, extend } from '@/utils';
+import { bus, extend } from '@/utils';
 import { getToken, setToken, setUser } from '@/utils/local';
 
 let TOKEN = getToken();
