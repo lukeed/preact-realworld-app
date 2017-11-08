@@ -1,7 +1,10 @@
 import { h, Component } from 'preact';
+import { logout } from '@/api/auth';
 
 export default class Settings extends Component {
 	state = { loading:false };
+
+	logout = logout;
 
 	render(props, state) {
 		return (
@@ -37,6 +40,12 @@ export default class Settings extends Component {
 									<button class="btn btn-lg btn-primary pull-xs-right">Update Settings</button>
 								</fieldset>
 							</form>
+
+							<hr/>
+
+							<button class="btn btn-outline-danger" onclick={ this.logout }>
+								Or click here to logout.
+							</button>
 						</div>
 
 					</div>
