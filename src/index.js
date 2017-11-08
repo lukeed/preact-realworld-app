@@ -42,10 +42,10 @@ export default class App extends Component {
 		});
 	}
 
-	render() {
+	render(_, state) {
 		return (
 			<div id="app">
-				<Header />
+				<Header user={ state.user } />
 				<Router history={ history } onChange={ this.onRoute }>
 					<Home path="/" />
 					<Login path="/login" />
