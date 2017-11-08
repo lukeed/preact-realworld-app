@@ -1,12 +1,18 @@
 import translate from 'snarkdown';
 import { h, Component } from 'preact';
 import { route, Link } from 'preact-router';
+import Comment from '@/components/article-comment';
 import Meta from '@/components/article-meta';
 import { getUser } from '@/utils/local';
 import { del, get, post } from '@/api';
 
 export default class Article extends Component {
-	state = { loading:true, user:getUser(), item:{} }
+	state = {
+		loading: true,
+		user: getUser(),
+		comments: [],
+		item: {}
+	}
 
 	onDelete = _ => {
 		del(`articles/${this.state.item.slug}`).then(_ => {
@@ -15,7 +21,11 @@ export default class Article extends Component {
 	}
 
 	onFollow = _ => {
-		let item = this.state.item;
+		let now = this.state;
+		if (!now.user) {
+			return route('/login', true);
+		}
+		let item = now.item;
 		let func = item.author.following ? del : post;
 		func(`profiles/${item.author.username}/follow`).then(res => {
 			item.author = res.profile;
@@ -24,11 +34,44 @@ export default class Article extends Component {
 	}
 
 	onFavorite = _ => {
-		let item = this.state.item;
+		let now = this.state;
+		if (!now.user) {
+			return route('/login', true);
+		}
+		let item = now.item;
 		let func = item.favorited ? del : post;
 		func(`articles/${item.slug}/favorite`).then(res => {
 			this.setState({ item:res.article });
 		});
+	}
+
+	onCommentAdd = ev => {
+		ev.preventDefault();
+
+		let now = this.state;
+		let elem = this.newBody;
+		let comment = { body:elem.value };
+
+		this.setState({ loading:true }, _ => {
+			post(`articles/${now.item.slug}/comments`, { comment }).then(res => {
+				elem.value = '';
+				this.setState({
+					loading: false,
+					comments: [res.comment].concat(now.comments)
+				});
+			});
+		});
+	}
+
+	onCommentRemove = id => {
+		return _ => {
+			let now = this.state;
+			del(`articles/${now.item.slug}/comments/${id}`).then(_ => {
+				this.setState({
+					comments: now.comments.filter(o => o.id !== id)
+				});
+			});
+		};
 	}
 
 	getItem(slug) {
@@ -38,6 +81,15 @@ export default class Article extends Component {
 			let item = res.article;
 			item.body = translate(item.body);
 			this.setState({ loading:false, item });
+		}).catch(err => {
+			if (err.status === '404') {
+				console.warn(`(404) Not found for '/articles/${slug}'...Back to safety!`);
+				route('/', true);
+			}
+		});
+
+		get(`articles/${slug}/comments`).then(res => {
+			this.setState({ comments:res.comments });
 		});
 	}
 
@@ -80,57 +132,41 @@ export default class Article extends Component {
 					<div class="article-actions">{ meta }</div>
 
 					<div class="row">
-
 						<div class="col-xs-12 col-md-8 offset-md-2">
+							{
+								!!me // logged in?
+								? (
+									<form class="card comment-form" onsubmit={ this.onCommentAdd }>
+										<div class="card-block">
+											<textarea ref={x => this.newBody=x} disabled={ state.loading }
+												rows="3" class="form-control" placeholder="Write a comment..." />
+										</div>
 
-							<form class="card comment-form">
-								<div class="card-block">
-									<textarea class="form-control" placeholder="Write a comment..." rows="3" />
-								</div>
-								<div class="card-footer">
-									<img src="http://i.imgur.com/Qr71crq.jpg" class="comment-author-img" />
-									<button class="btn btn-sm btn-primary">Post Comment</button>
-								</div>
-							</form>
+										<div class="card-footer">
+											<img src={ me.image } class="comment-author-img" />
+											<button class="btn btn-sm btn-primary" disabled={ state.loading }>Post Comment</button>
+										</div>
+									</form>
+								) : (
+									<p>
+										<Link href="/login">Sign in</Link> or <Link href="/register">Sign up</Link> to add comments on this article.
+									</p>
+								)
+							}
 
-							<div class="card">
-								<div class="card-block">
-									<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-								</div>
-								<div class="card-footer">
-									<a href="" class="comment-author">
-										<img src="http://i.imgur.com/Qr71crq.jpg" class="comment-author-img" />
-									</a>
-									&nbsp;
-									<a href="" class="comment-author">Jacob Schmidt</a>
-									<span class="date-posted">Dec 29th</span>
-								</div>
-							</div>
-
-							<div class="card">
-								<div class="card-block">
-									<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-								</div>
-								<div class="card-footer">
-									<a href="" class="comment-author">
-										<img src="http://i.imgur.com/Qr71crq.jpg" class="comment-author-img" />
-									</a>
-									&nbsp;
-									<a href="" class="comment-author">Jacob Schmidt</a>
-									<span class="date-posted">Dec 29th</span>
-									<span class="mod-options">
-										<i class="ion-edit" />
-										<i class="ion-trash-a" />
-									</span>
-								</div>
-							</div>
-
+							{
+								state.comments.map(o => {
+									return h(Comment, {
+										key: o.id,
+										comment: o,
+										onDelete: this.onCommentRemove,
+										isMine: me && me.username === o.author.username,
+									});
+								})
+							}
 						</div>
-
 					</div>
-
 				</div>
-
 			</div>
 		);
 	}
