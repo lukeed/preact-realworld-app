@@ -7,6 +7,7 @@ import { bus } from '@/utils';
 import Header from '@/components/header';
 import Profile from '@/routes/profile';
 
+import Settings from '@/routes/settings';
 import Register from '@/routes/register';
 import Login from '@/routes/login';
 import Home from '@/routes/home';
@@ -50,6 +51,7 @@ export default class App extends Component {
 					<Home path="/" />
 					<Login path="/login" />
 					<Register path="/register" />
+					<Settings path="/settings" />
 					<Profile path="/profile/" user="me" />
 					<Profile path="/profile/:user" />
 				</Router>

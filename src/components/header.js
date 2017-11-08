@@ -36,7 +36,7 @@ export default function Header(props) {
 						user && (
 						<li class="nav-item">
 							<Link href={ `/@${user.username}` } activeClassName="active" class="nav-link">
-								<img src={ user.image } /> { user.username }
+								<img class="user-pic" src={ user.image } /> { user.username }
 							</Link>
 						</li>
 						)
