@@ -17,6 +17,7 @@
   "dependencies": {
     "history": "^4.7.2",
     "preact": "^8.2.1",
-    "preact-router": "^2.5.5"
+    "preact-router": "^2.5.5",
+    "unfetch": "^3.0.0"
   }
 }
