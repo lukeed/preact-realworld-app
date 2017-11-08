@@ -1,3 +1,7 @@
+import mitt from 'mitt';
+
+export const bus = mitt();
+
 export function serialize(elm) {
 	let i=0, tmp, arr=elm.elements, out={}
 	for (; i < arr.length; i++) {

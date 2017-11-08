@@ -1,4 +1,4 @@
-import { extend } from '@/utils';
+import { bux, extend } from '@/utils';
 import { getToken, setToken, setUser } from '@/utils/local';
 
 let TOKEN = getToken();
@@ -19,4 +19,6 @@ export function login(res) {
 	console.log('> user', user);
 	setToken(TOKEN=user.token);
 	setUser(user);
+	bus.emit('auth:change', user);
+}
 }
