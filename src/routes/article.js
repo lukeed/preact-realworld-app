@@ -37,6 +37,24 @@ export default class Article extends Component {
 		});
 	}
 
+	onCommentAdd = ev => {
+		ev.preventDefault();
+
+		let now = this.state;
+		let elem = this.newBody;
+		let comment = { body:elem.value };
+
+		this.setState({ loading:true }, _ => {
+			post(`articles/${now.item.slug}/comments`, { comment }).then(res => {
+				elem.value = '';
+				this.setState({
+					loading: false,
+					comments: [res.comment].concat(now.comments)
+				});
+			});
+		});
+	}
+
 	onCommentRemove = id => {
 		return _ => {
 			let now = this.state;
@@ -107,13 +125,15 @@ export default class Article extends Component {
 
 					<div class="row">
 						<div class="col-xs-12 col-md-8 offset-md-2">
-							<form class="card comment-form">
+							<form class="card comment-form" onsubmit={ this.onCommentAdd }>
 								<div class="card-block">
-									<textarea class="form-control" placeholder="Write a comment..." rows="3" />
+									<textarea ref={x => this.newBody=x} disabled={ state.loading }
+										rows="3" class="form-control" placeholder="Write a comment..." />
 								</div>
+
 								<div class="card-footer">
-									<img src="http://i.imgur.com/Qr71crq.jpg" class="comment-author-img" />
-									<button class="btn btn-sm btn-primary">Post Comment</button>
+									<img src={ me.image } class="comment-author-img" />
+									<button class="btn btn-sm btn-primary" disabled={ state.loading }>Post Comment</button>
 								</div>
 							</form>
 
@@ -128,11 +148,8 @@ export default class Article extends Component {
 								})
 							}
 						</div>
-
 					</div>
-
 				</div>
-
 			</div>
 		);
 	}
