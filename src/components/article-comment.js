@@ -4,6 +4,7 @@ import { Link } from 'preact-router';
 export default function (props) {
 	let d = props.comment;
 	let author = d.author;
+	let onClick = props.isMine && props.onDelete(d.id);
 
 	return (
 		<div class="card">
@@ -25,8 +26,7 @@ export default function (props) {
 				<span class="date-posted">{ new Date(d.createdAt).toDateString() }</span>
 
 				{ props.isMine && (
-					<span class="mod-options">
-						<i class="ion-edit" />
+					<span class="mod-options" onclick={ onClick }>
 						<i class="ion-trash-a" />
 					</span>
 				 ) }

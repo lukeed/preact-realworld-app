@@ -37,6 +37,17 @@ export default class Article extends Component {
 		});
 	}
 
+	onCommentRemove = id => {
+		return _ => {
+			let now = this.state;
+			del(`articles/${now.item.slug}/comments/${id}`).then(_ => {
+				this.setState({
+					comments: now.comments.filter(o => o.id !== id)
+				});
+			});
+		};
+	}
+
 	getItem(slug) {
 		slug = slug || this.props.title;
 
@@ -107,9 +118,13 @@ export default class Article extends Component {
 							</form>
 
 							{
-								state.comments.map(obj => {
-									let isMine = me && me.username === obj.author.username;
-									return h(Comment, { key:obj.id, comment:obj, isMine });
+								state.comments.map(o => {
+									return h(Comment, {
+										key: o.id,
+										comment: o,
+										onDelete: this.onCommentRemove,
+										isMine: me && me.username === o.author.username,
+									});
 								})
 							}
 						</div>
