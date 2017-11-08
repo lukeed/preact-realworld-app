@@ -8,9 +8,9 @@ export default class Login extends Component {
 
 	onSubmit = ev => {
 		ev.preventDefault();
-		let obj = serialize(ev.target);
+		let user = serialize(ev.target);
 		this.setState({ loading:true }, _ => {
-			login(obj).then(console.log).catch(err => {
+			login({ user }).then(console.log).catch(err => {
 				this.setState({
 					loading: false,
 					errors: toErrors(err.errors)
