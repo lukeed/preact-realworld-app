@@ -37,29 +37,28 @@ export default class Article extends Component {
 
 	render(_, state) {
 		let me = state.user;
-		let data = state.item;
-		let author = data.author || {};
-		let isAuthor = me && me.username === author.username;
+		let article = state.item;
+		let isOwner = me && me.username === (article.author || {}).username;
+
+		let meta = h(Meta, { article, isOwner, onFollow:this.onFollow });
 
 		return (
 			<div class="article-page">
 				<div class="banner">
 					<div class="container">
-						<h1>{ data.title }</h1>
-						<Meta isOwner={ isAuthor } article={ data } onFollow={ this.onFollow } />
+						<h1>{ article.title }</h1>
+						{ meta }
 					</div>
 				</div>
 
 				<div class="container page">
 					<div class="row article-content">
-						<div class="col-md-12" dangerouslySetInnerHTML={{ __html:data.body }} />
+						<div class="col-md-12" dangerouslySetInnerHTML={{ __html:article.body }} />
 					</div>
 
 					<hr />
 
-					<div class="article-actions">
-						<Meta isOwner={ isAuthor } article={ data } onFollow={ this.onFollow } />
-					</div>
+					<div class="article-actions">{ meta }</div>
 
 					<div class="row">
 
